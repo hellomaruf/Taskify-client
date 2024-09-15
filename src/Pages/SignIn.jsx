@@ -1,8 +1,13 @@
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import { useContext } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { AuthContaxt } from "../Services/AuthProvider";
 
 function SignIn() {
+  const { signInUser,googleLogin } = useContext(AuthContaxt);
+  const from = location.state?.from?.pathname || "/";
   const CustomTextField = styled(TextField)(() => ({
     "& .MuiInputLabel-root": {
       color: "gray", // Default label color
@@ -24,7 +29,39 @@ function SignIn() {
     },
   }));
 
-  const handleSignInUser = () => {};
+  const handleSignInUser = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    signInUser(email, password)
+      .then((res) => {
+        console.log(res.user);
+        if (res.user) {
+          toast.success("Successfully SignIn!");
+          navigate(from);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+      });
+  };
+
+  const handleGoogleLogin = () => {
+    googleLogin();
+    navigate(from);
+    // .then((res) => {
+    //   console.log(res.user);
+    //   toast.success("Successfully SignIn!");
+    //   navigate(from);
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    //   toast.error(error.message);
+    // });
+  };
+
   return (
     <div>
       <div className="h-screen flex items-center justify-center ">
@@ -79,7 +116,7 @@ function SignIn() {
 
           <div className="flex items-center mt-6 ">
             <button
-              //   onClick={handleGoogleLogin}
+              onClick={handleGoogleLogin}
               type="button"
               className="flex btn items-center justify-center w-full px-6 py-2  text-sm font-medium text-white transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:bg-blue-400 focus:outline-none"
             >
