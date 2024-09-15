@@ -1,12 +1,15 @@
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { AuthContaxt } from "../Services/AuthProvider";
 
 function SignUp() {
-    const [userRole, setUserRole] = useState("");
-    console.log(userRole);
-    
+  const [userRole, setUserRole] = useState("");
+  const { createNewUser } = useContext(AuthContaxt);
+  console.log(userRole);
+
   const CustomTextField = styled(TextField)(() => ({
     "& .MuiInputLabel-root": {
       color: "gray", // Default label color
@@ -31,14 +34,69 @@ function SignUp() {
     setUserRole(e.target.value);
   };
 
-  const handleSignUp = () => {};
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    const userInfo = {
+      name,
+      email,
+      password,
+      userRole,
+    };
+    console.log(userInfo);
+
+    createNewUser(email, password)
+      .then((res) => {
+        if (res) {
+          toast.success("Successfully SignUp!");
+          console.log(res.user);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div>
       <div className="h-screen flex items-center justify-center">
         <div className="w-full max-w-sm p-6 m-auto mx-auto backdrop-blur-xl border bg-gray-100 bg-opacity-60 rounded-lg  ">
           <div className="flex justify-center mx-auto ">
             <h3 className="text-3xl font-bold text-[#36A853]">Taskify</h3>
-          </div>
+                  </div>
+                  
+            <div className=" mt-4">
+              <div className="flex items-center gap-4">
+                <div className="form-control ">
+                  <label className="label cursor-pointer flex gap-2">
+                    <span className="label-text text-lg">Normal User</span>
+                    <input
+                      type="radio"
+                      name="radio-10"
+                      className="radio checked:bg-[#36A853]"
+                      value={"Normal User"}
+                      onChange={handleUserRole}
+                    />
+                  </label>
+                </div>
+                <div className="form-control">
+                  <label className="label cursor-pointer flex gap-2">
+                    <span className="label-text text-lg">Admin</span>
+                    <input
+                      type="radio"
+                      required
+                      onChange={handleUserRole}
+                      name="radio-10"
+                      className="radio checked:bg-[#36A853]"
+                      value="Admin"
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
 
           <form onSubmit={handleSignUp} className="mt-6">
             <div className="mt-4">
@@ -76,35 +134,6 @@ function SignUp() {
               />
             </div>
 
-            <div className=" mt-4">
-              <div className="flex items-center gap-4">
-                <div className="form-control ">
-                  <label className="label cursor-pointer flex gap-2">
-                    <span className="label-text text-lg">Normal User</span>
-                    <input
-                      type="radio"
-                      name="radio-10"
-                      className="radio checked:bg-[#36A853]"
-                      value={"Normal User"}
-                      onChange={handleUserRole}
-                    />
-                  </label>
-                </div>
-                <div className="form-control">
-                  <label className="label cursor-pointer flex gap-2">
-                    <span className="label-text text-lg">Admin</span>
-                    <input
-                      type="radio"
-                      required
-                      onChange={handleUserRole}
-                      name="radio-10"
-                      className="radio checked:bg-[#36A853]"
-                      value="Admin"
-                    />
-                  </label>
-                </div>
-              </div>
-            </div>
 
             <div className="mt-6">
               <button className="w-full btn px-6 py-2.5 text-sm font-medium tracking-wide bg-[#36A853] text-white capitalize transition-colors duration-300 transform  rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
