@@ -4,7 +4,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function SignUp() {
-  const [userRole, setUserRole] = useState("");
+    const [userRole, setUserRole] = useState("");
+    console.log(userRole);
+    
   const CustomTextField = styled(TextField)(() => ({
     "& .MuiInputLabel-root": {
       color: "gray", // Default label color
