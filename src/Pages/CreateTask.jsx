@@ -1,19 +1,30 @@
 import axios from "axios";
+import { useContext } from "react";
+import toast from "react-hot-toast";
+import { AuthContaxt } from "../Services/AuthProvider";
 
 function CreateTask() {
+  const { user } = useContext(AuthContaxt);
   const handleSubmitTask = async (e) => {
     e.preventDefault();
     const form = e.target;
     const title = form.title.value;
     const descreption = form.description.value;
+    const email = user?.email;
+    const status = "pending";
     const taskInfo = {
       title,
       descreption,
+      email,
+      status,
     };
     await axios
       .post(`${import.meta.env.VITE_LOCALHOST_URL}/tasks`, taskInfo)
       .then((res) => {
         console.log(res.data);
+        if (res.data) {
+          toast.success("Added Task Successfully!");
+        }
       })
       .catch((error) => {
         console.log(error);

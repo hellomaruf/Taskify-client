@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { AuthContaxt } from "../Services/AuthProvider";
+import { Link } from "react-router-dom";
 
 function Nav() {
   const { user } = useContext(AuthContaxt);
@@ -7,9 +8,9 @@ function Nav() {
   return (
     <div>
       <div className="navbar max-w-7xl mx-auto my-3">
-        <div className="flex-1">
+        <Link to={"/"} className="flex-1">
           <h3 className="text-4xl font-bold text-[#36A853]">Taskify</h3>
-        </div>
+        </Link>
         <div className="flex-none gap-2">
           <div className="form-control">
             <input
