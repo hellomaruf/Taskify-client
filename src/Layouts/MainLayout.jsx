@@ -1,11 +1,12 @@
-import TaskHome from "../Pages/TaskHome";
+import { Outlet } from "react-router-dom";
 import Nav from "../Shared/Nav";
 
 function MainLayout() {
   return (
     <div>
       <Nav />
-      <TaskHome />
+      {/* <TaskHome /> */}
+      <Outlet />
     </div>
   );
 }
