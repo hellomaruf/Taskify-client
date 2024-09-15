@@ -12,11 +12,13 @@ function CreateTask() {
     const descreption = form.description.value;
     const email = user?.email;
     const status = "pending";
+    const subtask = [];
     const taskInfo = {
       title,
       descreption,
       email,
       status,
+      subtask,
     };
     await axios
       .post(`${import.meta.env.VITE_LOCALHOST_URL}/tasks`, taskInfo)

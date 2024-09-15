@@ -2,12 +2,13 @@ import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { useContext } from "react";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContaxt } from "../Services/AuthProvider";
 
 function SignIn() {
   const { signInUser,googleLogin } = useContext(AuthContaxt);
-  const from = location.state?.from?.pathname || "/";
+    const from = location.state?.from?.pathname || "/";
+    const navigate = useNavigate()
   const CustomTextField = styled(TextField)(() => ({
     "& .MuiInputLabel-root": {
       color: "gray", // Default label color
@@ -39,7 +40,7 @@ function SignIn() {
         console.log(res.user);
         if (res.user) {
           toast.success("Successfully SignIn!");
-          navigate(from);
+          navigate('/');
         }
       })
       .catch((error) => {

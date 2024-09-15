@@ -5,17 +5,19 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { IoIosArrowDown, IoMdAddCircleOutline } from "react-icons/io";
+import { MdDeleteOutline } from "react-icons/md";
 
 function TaskHome() {
   const { user } = useContext(AuthContaxt);
   const [status, setStatus] = useState("pending");
+  const [addedSubtaskItem, setAddedSubtaskItem] = useState(null);
 
   const handleChange = (event) => {
     setStatus(event.target.value);
   };
   console.log(user?.email);
 
-  const { data: tasks, isLoading } = useQuery({
+  const { data: tasks, isLoading, refetch } = useQuery({
     queryKey: ["tasks"],
     queryFn: async () => {
       const { data } = await axios.get(
@@ -31,10 +33,31 @@ function TaskHome() {
   const completedTasks = tasks?.filter((task) => task.status === "completed");
   console.log(pendingTasks);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const subtask = e.target.task.value;
-    console.log(subtask);
+    const title = addedSubtaskItem;
+    const subtaskInfo = {
+      subtask,
+      title,
+    };
+
+    await axios
+      .patch(
+        `${import.meta.env.VITE_LOCALHOST_URL}/subtask/${title}`,
+        subtaskInfo
+      )
+      .then((res) => {
+        console.log(res.data);
+        refetch()
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleSubtaskItem = (item) => {
+    setAddedSubtaskItem(item);
   };
 
   return (
@@ -69,10 +92,22 @@ function TaskHome() {
                             {item?.title}{" "}
                           </h3>
                           <label htmlFor="my_modal_6" className="">
-                            <IoMdAddCircleOutline className="text-xl cursor-pointer" />
+                            <IoMdAddCircleOutline
+                              onClick={() => handleSubtaskItem(item?.title)}
+                              className="text-xl cursor-pointer"
+                            />
                           </label>
                         </div>
                         <p>{item?.descreption?.slice(0, 150)}...</p>
+
+                        <div className="space-y-3">
+                        {item?.subtask?.map((subtask, index) => (
+                          <div className="flex items-center justify-between bg-gray-100 p-3 rounded-xl" key={index}>
+                            <h4 className="font-semibold">{subtask}</h4>
+                            <MdDeleteOutline />
+                          </div>
+                        ))}
+                      </div>
                         <div className="flex items-center  gap-3">
                           <select
                             className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
@@ -111,6 +146,14 @@ function TaskHome() {
                         <IoMdAddCircleOutline className="text-xl cursor-pointer" />
                       </div>
                       <p>{item?.descreption?.slice(0, 150)}...</p>
+
+                      <div className="">
+                        {item?.subtask?.map((subtask, index) => (
+                          <div className="" key={index}>
+                            <h4>{subtask}</h4>
+                          </div>
+                        ))}
+                      </div>
                       <div className="flex items-center  gap-3">
                         <select
                           className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
@@ -172,10 +215,6 @@ function TaskHome() {
       </div>
 
       {/* modal */}
-      <label htmlFor="my_modal_6" className="btn">
-        open modal
-      </label>
-
       {/* Put this part before </body> tag */}
       <input type="checkbox" id="my_modal_6" className="modal-toggle" />
       <div className="modal" role="dialog">
