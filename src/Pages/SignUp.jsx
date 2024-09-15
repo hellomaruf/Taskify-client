@@ -8,7 +8,7 @@ import axios from "axios";
 
 function SignUp() {
   const [userRole, setUserRole] = useState("");
-  const { createNewUser } = useContext(AuthContaxt);
+  const { createNewUser, updateUserProfile } = useContext(AuthContaxt);
   console.log(userRole);
 
   const CustomTextField = styled(TextField)(() => ({
@@ -41,18 +41,21 @@ function SignUp() {
     const name = form.name.value;
     const email = form.email.value;
     const password = form.password.value;
+    const photo = "https://i.ibb.co.com/bWMZW5V/Maruf-pic.jpg";
 
     const userInfo = {
       name,
       email,
       password,
+      photo,
       userRole,
     };
     console.log(userInfo);
 
     createNewUser(email, password)
       .then((res) => {
-        if (res) {
+        updateUserProfile(name, photo);
+        if (res.user) {
           toast.success("Successfully SignUp!");
           console.log(res.user);
         }
