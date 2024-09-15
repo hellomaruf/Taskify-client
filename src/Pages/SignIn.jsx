@@ -51,15 +51,6 @@ function SignIn() {
   const handleGoogleLogin = () => {
     googleLogin();
     navigate(from);
-    // .then((res) => {
-    //   console.log(res.user);
-    //   toast.success("Successfully SignIn!");
-    //   navigate(from);
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    //   toast.error(error.message);
-    // });
   };
 
   return (
