@@ -60,6 +60,18 @@ function TaskHome() {
     setAddedSubtaskItem(item);
   };
 
+  const handleDeleteRootTask = async (id) => {
+    await axios
+      .delete(`${import.meta.env.VITE_LOCALHOST_URL}/deleteRootTask/${id}`)
+      .then((res) => {
+        console.log(res.data);
+        refetch();
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
   return (
     <div>
       <div className=" max-w-7xl mx-auto my-10">
@@ -92,11 +104,11 @@ function TaskHome() {
                             {item?.title}{" "}
                           </h3>
                           <div className="flex items-center gap-2">
-                            <MdDeleteOutline className="text-xl cursor-pointer" />
-                            <label
-                              htmlFor="my_modal_6"
-                              className=""
-                            >
+                            <MdDeleteOutline
+                              onClick={() => handleDeleteRootTask(item?._id)}
+                              className="text-xl cursor-pointer"
+                            />
+                            <label htmlFor="my_modal_6" className="">
                               <IoMdAddCircleOutline
                                 onClick={() => handleSubtaskItem(item?.title)}
                                 className="text-xl cursor-pointer"
