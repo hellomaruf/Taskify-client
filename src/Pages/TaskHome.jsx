@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
+import toast from "react-hot-toast";
 
 function TaskHome() {
   const { user } = useContext(AuthContaxt);
@@ -60,16 +61,24 @@ function TaskHome() {
     setAddedSubtaskItem(item);
   };
 
-  const handleDeleteRootTask = async (id) => {
-    await axios
-      .delete(`${import.meta.env.VITE_LOCALHOST_URL}/deleteRootTask/${id}`)
-      .then((res) => {
-        console.log(res.data);
-        refetch();
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+  const handleDeleteRootTask = async (taskId) => {
+    const task = tasks.find((t) => t._id === taskId);
+    console.log(task);
+    if (task.subtask.length > 0) {
+      toast("Cannot delete this task because it has subtasks");
+    } else {
+      await axios
+        .delete(
+          `${import.meta.env.VITE_LOCALHOST_URL}/deleteRootTask/${taskId}`
+        )
+        .then((res) => {
+          console.log(res.data);
+          refetch();
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    }
   };
 
   return (
