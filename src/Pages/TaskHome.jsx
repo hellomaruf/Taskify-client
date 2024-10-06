@@ -4,7 +4,7 @@ import { FaCheck, FaPlusCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { IoIosArrowDown, IoMdAddCircleOutline } from "react-icons/io";
+import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
 
 function TaskHome() {
@@ -17,7 +17,7 @@ function TaskHome() {
   };
   console.log(user?.email);
 
-  const { data: tasks, isLoading, refetch } = useQuery({
+  const { data: tasks, refetch } = useQuery({
     queryKey: ["tasks"],
     queryFn: async () => {
       const { data } = await axios.get(
@@ -49,7 +49,7 @@ function TaskHome() {
       )
       .then((res) => {
         console.log(res.data);
-        refetch()
+        refetch();
       })
       .catch((error) => {
         console.log(error);
@@ -91,23 +91,32 @@ function TaskHome() {
                           <h3 className="text-lg font-semibold">
                             {item?.title}{" "}
                           </h3>
-                          <label htmlFor="my_modal_6" className="">
-                            <IoMdAddCircleOutline
-                              onClick={() => handleSubtaskItem(item?.title)}
-                              className="text-xl cursor-pointer"
-                            />
-                          </label>
+                          <div className="flex items-center gap-2">
+                            <MdDeleteOutline className="text-xl cursor-pointer" />
+                            <label
+                              htmlFor="my_modal_6"
+                              className=""
+                            >
+                              <IoMdAddCircleOutline
+                                onClick={() => handleSubtaskItem(item?.title)}
+                                className="text-xl cursor-pointer"
+                              />
+                            </label>
+                          </div>
                         </div>
                         <p>{item?.descreption?.slice(0, 150)}...</p>
 
                         <div className="space-y-3">
-                        {item?.subtask?.map((subtask, index) => (
-                          <div className="flex items-center justify-between bg-gray-100 p-3 rounded-xl" key={index}>
-                            <h4 className="font-semibold">{subtask}</h4>
-                            <MdDeleteOutline />
-                          </div>
-                        ))}
-                      </div>
+                          {item?.subtask?.map((subtask, index) => (
+                            <div
+                              className="flex items-center justify-between bg-gray-100 p-3 rounded-xl"
+                              key={index}
+                            >
+                              <h4 className="font-semibold">{subtask}</h4>
+                              <MdDeleteOutline />
+                            </div>
+                          ))}
+                        </div>
                         <div className="flex items-center  gap-3">
                           <select
                             className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
@@ -231,7 +240,7 @@ function TaskHome() {
                 type="text"
                 name="task"
                 placeholder="Enter Subtask"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
               <div className="space-x-3">
                 <label>
