@@ -63,7 +63,6 @@ function TaskHome() {
 
   const handleDeleteRootTask = async (taskId) => {
     const task = tasks.find((t) => t._id === taskId);
-    console.log(task);
     if (task.subtask.length > 0) {
       toast("Cannot delete this task because it has subtasks");
     } else {
@@ -77,6 +76,22 @@ function TaskHome() {
         })
         .catch((error) => {
           console.log(error.message);
+        });
+    }
+  };
+
+  const handleDeleteSubtask = async (subtask) => {
+    if (subtask) {
+      await axios
+        .delete(
+          `${import.meta.env.VITE_LOCALHOST_URL}/deleteSubtask/${subtask}`
+        )
+        .then((res) => {
+          console.log(res.data);
+          refetch();
+        })
+        .catch((error) => {
+          toast.error(error.message);
         });
     }
   };
@@ -126,7 +141,6 @@ function TaskHome() {
                           </div>
                         </div>
                         <p>{item?.descreption?.slice(0, 150)}...</p>
-
                         <div className="space-y-3">
                           {item?.subtask?.map((subtask, index) => (
                             <div
@@ -134,7 +148,10 @@ function TaskHome() {
                               key={index}
                             >
                               <h4 className="font-semibold">{subtask}</h4>
-                              <MdDeleteOutline />
+                              <MdDeleteOutline
+                                onClick={() => handleDeleteSubtask(subtask)}
+                                className="cursor-pointer"
+                              />
                             </div>
                           ))}
                         </div>
